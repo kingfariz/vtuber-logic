@@ -1,0 +1,11 @@
+config.py
+tes.py
+__pycache__/
+chat.txt
+output.txt
+input.wav
+output.wav
+node_modules/
+model.pt
+conversation.json
+test.wav

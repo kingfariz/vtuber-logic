@@ -1,0 +1,33 @@
+# With googletrans
+# alkana
+# emoji
+# googletrans==4.0.0rc1
+# keyboard
+# mecab-python3
+# openai==0.28.1
+# pandas
+# PyAudio
+# pytchat
+# requests
+# torch
+# unidic
+# httpx==0.13.3
+# httpcore==0.18.0
+# numpy==2.1.0
+
+
+# Without googletrans
+alkana
+emoji
+keyboard
+mecab-python3
+openai==1.42.0
+pandas
+PyAudio
+pytchat
+requests
+torch
+unidic
+httpx==0.25.0
+TikTokLive==6.1.0
+httpcore==0.18.0
