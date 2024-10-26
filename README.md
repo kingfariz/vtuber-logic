@@ -2,7 +2,7 @@
 
 Utilizes various technologies such as VoiceVox Engine, DeepL, Whisper OpenAI, Seliro TTS and VtubeStudio to create an AI waifu virtual YouTuber.
 
-![My Remote Image](https://github.com/ardha27/AI-Waifu-Vtuber/blob/master/ss.png?raw=true)
+![Local Image](Capture.JPG)
 
 ## Demo
 
@@ -47,7 +47,7 @@ if you want to use it for livestream, create a list of users that you want to bl
 blacklist = ["Nightbot", "streamelements"]
 ```
 
-4. Change the lore or identity of your assistant. Change the txt file at `characterConfig\Pina\identity.txt`
+4. Change the lore or identity of your assistant. Change the txt file at `characterConfig\Character\identity.txt`
 
 5. If you want to stream on Twitch you need to change the config file at `utils/twitch_config.py`. Get your token from [Here](https://twitchapps.com/tmi/). Your token should look something like oauth:43rip6j6fgio8n5xly1oum1lph8ikl1 (fake for this tutorial). After you change the config file, you can start the program using Mode - 3
 
@@ -86,7 +86,7 @@ voicevox_url = 'http://localhost:50021'
 
 if you want to see the voice list of VoiceVox you can check this [VoiceVox](https://voicevox.hiroshiba.jp) and see the speaker id on `speaker.json` then change it on `utils/TTS.py`.
 
-7. Choose which translator you want to use depends on your use case (optional if you need translation for the answers). Choose between google translate or deeplx. You need to convert the answer to Japanese if you want to use `VoiceVox`, because VoiceVox only accepts input in Japanese. The language answer from OpenAI will depens on your assistant lore language `characterConfig\Pina\identity.txt` and the input language
+7. Choose which translator you want to use depends on your use case (optional if you need translation for the answers). Choose between google translate or deeplx. You need to convert the answer to Japanese if you want to use `VoiceVox`, because VoiceVox only accepts input in Japanese. The language answer from OpenAI will depens on your assistant lore language `characterConfig\Character\identity.txt` and the input language
 
 ```
 tts = translate_deeplx(text, f"{detect}", "JA")
@@ -168,6 +168,4 @@ params_encoded = urllib.parse.urlencode({'text': tts, 'speaker': 46})
 
 ## Credits
 
-This project is inspired by the work of shioridotdev. Special thanks to the creators of the technologies used in this project including VoiceVox Engine, DeepL, Whisper OpenAI, and VtubeStudio.
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R7AH1FA)
+This project is inspired by the work of ardhach. Special thanks to the creators of the technologies used in this project including VoiceVox Engine, DeepL, Whisper OpenAI, and VtubeStudio.

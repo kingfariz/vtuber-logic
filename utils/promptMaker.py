@@ -14,7 +14,7 @@ def getPrompt():
     prompt = []
 
     # Get Vtuber identity
-    prompt.append(getIdentity("characterConfig/Pina/identity.txt"))
+    prompt.append(getIdentity("characterConfig/Character/identity.txt"))
 
     # Lock response characters
     # prompt.append({"role": "system", "content": "answer in english language"})
