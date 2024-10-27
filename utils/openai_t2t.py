@@ -1,10 +1,6 @@
 import os
 from dotenv import load_dotenv
-
 from langchain_openai import ChatOpenAI
-# from openai import OpenAI
-# from ionic_langchain.tool import IonicTool
-# from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.messages import AIMessage, SystemMessage
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -26,11 +22,10 @@ class InMemoryHistory(BaseChatMessageHistory, BaseModel):
     messages: List[BaseMessage] = Field(default_factory=list)
 
     def add_messages(self, messages: List[BaseMessage]) -> None:
-        """Add a list of messages to the store"""
         self.messages.extend(messages)
-
     def clear(self) -> None:
         self.messages = []
+
 store = {}
 
 def get_by_session_id(session_id: str) -> BaseChatMessageHistory:
@@ -79,8 +74,8 @@ def openai_conversation():
         print(response.content)
         yield response.content
 
-if __name__ == "__main__":
-    for response in openai_conversation():
-        pass
+# if __name__ == "__main__":
+#     for response in openai_conversation():
+#         pass
 
 

@@ -34,6 +34,11 @@ pip install -r requirements.txt
 ```
 api_key = 'yourapikey'
 ```
+And create `.env` file and store your OpenAI api key
+
+```
+OPENAI_API_KEY=yourapikey
+```
 
 3. Change the owner name
 
