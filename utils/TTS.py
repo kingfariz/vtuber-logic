@@ -1,5 +1,3 @@
-import os
-import torch
 import requests
 import urllib.parse
 # from utils.katakana import *
