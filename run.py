@@ -1,5 +1,5 @@
 from openai import OpenAI
-import winsound
+# import winsound
 import sys
 import pytchat
 import time
