@@ -24,10 +24,12 @@ mecab-python3
 openai==1.42.0
 pandas
 PyAudio
+pyautogui
 pytchat
 requests
-torch
+sounddevice
+soundfile
 unidic
 httpx==0.25.0
-TikTokLive==6.1.0
+TikTokLive
 httpcore==0.18.0
