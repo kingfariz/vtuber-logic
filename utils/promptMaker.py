@@ -30,7 +30,7 @@ def getPrompt():
 
     # Append conversation history except the last message
     for message in history[:-1]:
-        prompt.append(message);
+        prompt.append(message)
 
     # Step 3: Add a system message for response constraints
     if status_config == "VIEWER_MODE":
