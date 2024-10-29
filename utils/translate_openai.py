@@ -6,7 +6,7 @@ from config import *
 
 # Set your OpenAI API key here
 client = OpenAI(api_key = api_key)
-sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
+# sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
 def translate_openai(text, target_lang):
     try:

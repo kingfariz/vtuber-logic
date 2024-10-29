@@ -27,7 +27,7 @@ from enum import Enum
 import pyautogui
 
 # to help the CLI write unicode characters to the terminal
-sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
+# sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
 client = OpenAI(api_key = api_key)
 
