@@ -33,3 +33,5 @@ unidic
 httpx==0.25.0
 TikTokLive
 httpcore==0.18.0
+dotenv
+langchain

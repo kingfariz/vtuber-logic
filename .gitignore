@@ -174,3 +174,7 @@ node_modules/
 model.pt
 conversation.json
 test.wav
+.env
+.venv
+env/
+venv/

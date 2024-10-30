@@ -11,7 +11,7 @@ def get_prompt(history: list[str]):
     total_len = 0
 
     # Get Vtuber identity/role
-    identity = get_identity("characterConfig/Character/identity.txt")
+    identity = get_identity("characterConfig/Character/shopping_assistant.txt")
     prompt = [identity] + history
 
     # Step 3: Add a system message for response constraints
