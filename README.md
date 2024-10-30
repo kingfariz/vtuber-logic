@@ -34,6 +34,7 @@ pip install -r requirements.txt
 ```
 api_key = 'yourapikey'
 ```
+
 And create `.env` file and store your OpenAI api key
 
 ```
@@ -43,7 +44,7 @@ OPENAI_API_KEY=yourapikey
 3. Change the owner name
 
 ```
-owner_name = "Farizi"
+owner_name = "YOUR_NAME"
 ```
 
 if you want to use it for livestream, create a list of users that you want to blacklist on `run.py`

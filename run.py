@@ -28,7 +28,7 @@ chat = ""
 chat_now = ""
 chat_prev = ""
 is_Speaking = False
-owner_name = "Farizi"
+owner_name = "Melting-LLM Admin"
 blacklist = ["Nightbot", "streamelements"]
 
 def preparation():
