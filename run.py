@@ -12,9 +12,9 @@ import sounddevice as sd
 from config import api_key
 from features.agent import get_openai_answer
 from features.vtuber import VTuber
-from streaming.tiktok import tiktok_livechat
-from streaming.twitch import twitch_livechat
-from streaming.youtube import youtube_livechat
+from features.streaming.tiktok import tiktok_livechat
+from features.streaming.twitch import twitch_livechat
+from features.streaming.youtube import youtube_livechat
 
 # to help the CLI write unicode characters to the terminal
 # sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
