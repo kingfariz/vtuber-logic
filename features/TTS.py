@@ -3,7 +3,7 @@ import urllib.parse
 # from utils.katakana import *
 
 
-def voicevox_tts(text: str, speaker_id=20, output_path="output.wav"):
+def voicevox_tts(text: str, speaker_id=3, output_path="output.wav"):
     # You need to run VoicevoxEngine.exe or voicevox docker first before running this script
     voicevox_url = 'http://localhost:50021'
     # Convert the text to katakana. Example: ORANGE -> オレンジ, so the voice will sound more natural
