@@ -267,7 +267,7 @@ def twitch_livechat():
             print("Error receiving chat: {0}".format(e))
 
 def play_audio(filename):
-    device_id = 8
+    device_id = 2
     data, sampleRate = sf.read(filename)
     sd.play(data, sampleRate, device=device_id)
     
@@ -324,7 +324,7 @@ def translate_text(text, expression_value):
     # winsound.PlaySound("test.wav", winsound.SND_FILENAME)
     filename = 'test.wav'
 
-    device_id = 8
+    device_id = 2
     data, sampleRate = sf.read(filename)
     sd.play(data, sampleRate, device=device_id)
     time.sleep(len(data) / sampleRate)
