@@ -1,14 +1,21 @@
 import json
 
-from config import status_config
+from pydantic import BaseModel
+from openai import OpenAI
 
+from config import status_config, max_token
+from utils.expressions import ExpressionEnum
+from utils.prompt_maker import get_prompt
 
-# function to get an answer from OpenAI
-def openai_answer(conversation, total_characters):
-    # global total_characters, conversation
+class AIChatResponse(BaseModel):
+    message: str
+    expression: ExpressionEnum
 
+# answer from OpenAI
+def get_openai_answer(client: OpenAI, conversation, total_characters):
     if status_config == "VIEWER_MODE":
         total_characters = sum(len(d['content']) for d in conversation)
+        
         while total_characters > 4000:
             try:
                 # print(total_characters)
@@ -18,11 +25,7 @@ def openai_answer(conversation, total_characters):
             except Exception as e:
                 print("Error removing old messages: {0}".format(e))
 
-    with open("conversation.json", "w", encoding="utf-8") as f:
-        # Write the message data to the file in JSON format
-        json.dump(history, f, indent=4)
-
-    prompt = getPrompt()
+    prompt = get_prompt(conversation)
 
     # response = client.chat.completions.create(
     response = client.beta.chat.completions.parse(
@@ -35,8 +38,6 @@ def openai_answer(conversation, total_characters):
         presence_penalty=0.5,    # Encourages introducing new topics
         response_format=AIChatResponse
     )
-    # message = response.choices[0].message.content
-
     message = response.choices[0].message.parsed.message
     expression_value = response.choices[0].message.parsed.expression
 
@@ -53,7 +54,3 @@ def openai_answer(conversation, total_characters):
     print(f"___________")
     
     return message, expression_value
-
-    conversation.append({'role': 'assistant', 'content': message})
-
-    translate_text(message, expression_value)

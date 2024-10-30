@@ -4,17 +4,16 @@ from config import *
 
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
-def getIdentity(identityPath):  
+def get_identity(identityPath):  
     with open(identityPath, "r", encoding="utf-8") as f:
         identityContext = f.read()
     return {"role": "system", "content": identityContext}
     
-def getPrompt():
+def get_prompt(history: list[str]):
     total_len = 0
-    prompt = []
 
-    # Get Vtuber identity
-    prompt.append(getIdentity("characterConfig/Character/identity.txt"))
+    # Get Vtuber identity/role
+    identity = get_identity("characterConfig/Character/identity.txt")
 
     # Lock response characters
     # prompt.append({"role": "system", "content": "answer in english language"})
@@ -24,13 +23,14 @@ def getPrompt():
     # })
 
      # Get Conversation History
-    with open("conversation.json", "r") as f:
-        data = json.load(f)
-    history = data["history"]
+    # with open("conversation.json", "r") as f:
+    #     data = json.load(f)
+    # history = data["history"]
 
     # Append conversation history except the last message
-    for message in history[:-1]:
-        prompt.append(message)
+    # for message in history[:-1]:
+    #     prompt.append(message)
+    prompt = [identity] + history
 
     # Step 3: Add a system message for response constraints
     if status_config == "VIEWER_MODE":
@@ -60,6 +60,6 @@ def getPrompt():
     return prompt
 
 if __name__ == "__main__":
-    prompt = getPrompt()
+    prompt = get_prompt()
     print(prompt)
     print(len(prompt))

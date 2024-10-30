@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from utils.agent import openai_answer
+from utils.agent import get_openai_answer
 from utils.record import handle_recording
 from utils.transcribe import transcribe_audio
 
@@ -12,7 +12,7 @@ class VTuber():
         self.openai_client = openai_client
         self.owner_name = owner_name
     
-    def start_conversation(self):
+    def start_voice_conversation(self):
         conversation: list[str] = list()
         chat_now = ""
         
@@ -23,7 +23,7 @@ class VTuber():
         content = self.owner_name + " said " + transcript
         conversation.append({'role': 'user', 'content': content})
 
-        message, expression_value = openai_answer()
+        message, expression_value = get_openai_answer()
         conversation.append({'role': 'assistant', 'content': message})
 
         translate_text(message, expression_value)
