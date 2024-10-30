@@ -1,6 +1,7 @@
 from openai import OpenAI
 # import winsound
 import sys
+import os
 import pytchat
 import time
 import re
@@ -10,6 +11,7 @@ import wave
 import threading
 import json
 import socket
+import io
 from emoji import demojize
 from config import *
 from utils.translate import *
@@ -43,6 +45,10 @@ chat_prev = ""
 is_Speaking = False
 owner_name = "Farizi"
 blacklist = ["Nightbot", "streamelements"]
+CHUNK = 1024
+CHANNELS = 1
+RATE = 16000
+FORMAT = pyaudio.paInt16
 
 class ExpressionEnum(str, Enum):
     Happy = "Happy"
@@ -58,56 +64,110 @@ class AIChatResponse(BaseModel):
     message: str
     expression: ExpressionEnum
 
-# function to get the user's input audio
-def record_audio():
-    CHUNK = 1024
-    FORMAT = pyaudio.paInt16
-    CHANNELS = 1
-    RATE = 44100
-    WAVE_OUTPUT_FILENAME = "input.wav"
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT,
-                    channels=CHANNELS,
-                    rate=RATE,
-                    input=True,
-                    frames_per_buffer=CHUNK)
+# # function to get the user's input audio
+# def record_audio():
+#     CHUNK = 1024
+#     FORMAT = pyaudio.paInt16
+#     CHANNELS = 1
+#     RATE = 44100
+#     WAVE_OUTPUT_FILENAME = "input.wav"
+#     p = pyaudio.PyAudio()
+#     sample_size = p.get_sample_size(FORMAT)
+#     stream = p.open(format=FORMAT,
+#                     channels=CHANNELS,
+#                     rate=RATE,
+#                     input=True,
+#                     frames_per_buffer=CHUNK)
+#     frames = []
+#     full_transcription = []
+#     print("Recording...")
+#     while keyboard.is_pressed('RIGHT_SHIFT'):
+#         data = stream.read(CHUNK)
+#         partial_transcription = transcribe_audio(data, WAVE_OUTPUT_FILENAME, RATE, CHANNELS, sample_size)
+#         full_transcription.append(partial_transcription)
+#         frames.append(data)
+#     print("Stopped recording.")
+#     stream.stop_stream()
+#     stream.close()
+#     p.terminate()
+#     print ("Question: " + chat_now)
+
+def record_chunk(p, stream, file_path, chunk_length=1):
     frames = []
-    print("Recording...")
-    while keyboard.is_pressed('RIGHT_SHIFT'):
+    for _ in range(0, int(RATE / CHUNK * chunk_length)):
         data = stream.read(CHUNK)
         frames.append(data)
-    print("Stopped recording.")
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
-    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    wf = wave.open(file_path, 'wb')
     wf.setnchannels(CHANNELS)
     wf.setsampwidth(p.get_sample_size(FORMAT))
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
     wf.close()
-    transcribe_audio("input.wav")
+    
+    # transcribe_audio("input.wav")
 
 # function to transcribe the user's audio
-def transcribe_audio(file):
+def transcribe_audio():
     global chat_now
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK)
+    
+    full_transcription = []
     try:
-        audio_file= open(file, "rb")
         # Translating the audio to English
         # transcript = openai.Audio.translate("whisper-1", audio_file)
         # Transcribe the audio to detected language
         # transcript = client.audio.transcriptions.create("whisper-1", audio_file)
         # chat_now = transcript.text
-        transcript = client.audio.transcriptions.create(model="whisper-1", file=audio_file, response_format="text")
-        chat_now = transcript
-        print ("Question: " + chat_now)
+        print("Question: ")
+        count = 0
+        while keyboard.is_pressed('RIGHT_SHIFT'):
+            count += 1
+            chunk_file = "temp_input.wav"
+            record_chunk(p, stream, chunk_file)
+            audio_file= open(chunk_file, "rb")
+            transcript = client.audio.transcriptions.create(model="whisper-1", file=audio_file, response_format="text")
+            print(count, transcript)
+            os.remove(chunk_file)
+            full_transcription.append(transcript)
+        print("Stopped recording.")
     except Exception as e:
         print("Error transcribing audio: {0}".format(e))
         return
+    finally:
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
 
-    result = owner_name + " said " + chat_now
+    result = owner_name + " said " + str(full_transcription)
     conversation.append({'role': 'user', 'content': result})
     openai_answer()
+
+## function to transcribe the user's audio
+# def transcribe_audio(file):
+#     global chat_now
+#     try:
+#         audio_file= open(file, "rb")
+#         # Translating the audio to English
+#         # transcript = openai.Audio.translate("whisper-1", audio_file)
+#         # Transcribe the audio to detected language
+#         # transcript = client.audio.transcriptions.create("whisper-1", audio_file)
+#         # chat_now = transcript.text
+#         transcript = client.audio.transcriptions.create(model="whisper-1", file=audio_file, response_format="text")
+#         chat_now = transcript
+#         print ("Question: " + chat_now)
+#     except Exception as e:
+#         print("Error transcribing audio: {0}".format(e))
+#         return
+
+#     result = owner_name + " said " + chat_now
+#     conversation.append({'role': 'user', 'content': result})
+#     openai_answer()
 
 # function to get an answer from OpenAI
 def openai_answer():
@@ -410,7 +470,7 @@ def handle_recording():
     print("Press and Hold Right Shift to record audio")
     while True:
         if keyboard.is_pressed('RIGHT_SHIFT'):
-            record_audio()
+            transcribe_audio()
 
 def main():
     print(sd.query_devices())
