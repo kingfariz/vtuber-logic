@@ -1,8 +1,6 @@
 import time
-
 import pyautogui
-
-from utils.expressions import ExpressionEnum
+from features.expressions import ExpressionEnum
 
 def press_keys(expression):
     key_mapping = {

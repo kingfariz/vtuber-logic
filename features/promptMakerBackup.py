@@ -1,7 +1,7 @@
 import json
 import sys
 
-sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
+# sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
 outputNum = 20
 

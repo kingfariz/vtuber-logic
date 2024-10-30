@@ -1,18 +1,18 @@
-import json
-
 from pydantic import BaseModel
 from openai import OpenAI
 
 from config import status_config, max_token
-from utils.expressions import ExpressionEnum
-from utils.prompt_maker import get_prompt
+from features.expressions import ExpressionEnum
+from features.prompt_maker import get_prompt
 
 class AIChatResponse(BaseModel):
     message: str
     expression: ExpressionEnum
 
 # answer from OpenAI
-def get_openai_answer(client: OpenAI, conversation, total_characters):
+def get_openai_answer(conversation, client: OpenAI,
+) -> tuple[str, ExpressionEnum]:
+    
     if status_config == "VIEWER_MODE":
         total_characters = sum(len(d['content']) for d in conversation)
         
@@ -27,7 +27,6 @@ def get_openai_answer(client: OpenAI, conversation, total_characters):
 
     prompt = get_prompt(conversation)
 
-    # response = client.chat.completions.create(
     response = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
         messages=prompt,
@@ -36,7 +35,7 @@ def get_openai_answer(client: OpenAI, conversation, total_characters):
         top_p=0.9,       # Balances diversity
         frequency_penalty=0.2,  # Avoids repetitive responses
         presence_penalty=0.5,    # Encourages introducing new topics
-        response_format=AIChatResponse
+        response_format=AIChatResponse,
     )
     message = response.choices[0].message.parsed.message
     expression_value = response.choices[0].message.parsed.expression

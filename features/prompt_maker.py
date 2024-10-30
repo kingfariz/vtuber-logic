@@ -1,8 +1,6 @@
-import json
-import sys
 from config import *
 
-sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
+# sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
 def get_identity(identityPath):  
     with open(identityPath, "r", encoding="utf-8") as f:
@@ -14,22 +12,6 @@ def get_prompt(history: list[str]):
 
     # Get Vtuber identity/role
     identity = get_identity("characterConfig/Character/identity.txt")
-
-    # Lock response characters
-    # prompt.append({"role": "system", "content": "answer in english language"})
-    # prompt.append({
-    #     "role": "system", 
-    #     "content": "Never return 'I'm sorry, I can't assist with that.' return 'censored' instead"
-    # })
-
-     # Get Conversation History
-    # with open("conversation.json", "r") as f:
-    #     data = json.load(f)
-    # history = data["history"]
-
-    # Append conversation history except the last message
-    # for message in history[:-1]:
-    #     prompt.append(message)
     prompt = [identity] + history
 
     # Step 3: Add a system message for response constraints
@@ -40,7 +22,6 @@ def get_prompt(history: list[str]):
                 "content": f"Make sure your response is within {maxCharacters} characters. Avoid answering with more than {maxCharacters} characters by summarizing the response. Here is the latest conversation.",
             }
         )
-
 
     prompt.append(history[-1])
 
@@ -53,9 +34,6 @@ def get_prompt(history: list[str]):
             except IndexError:
                 print("Error: Prompt too long! Unable to remove more items.")
                 break  # Exit the loop if no more items can be removed
-
-    # total_characters = sum(len(d['content']) for d in prompt)
-    # print(f"Total characters: {total_characters}")
     
     return prompt
 
