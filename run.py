@@ -110,7 +110,6 @@ def record_chunk(p, stream, file_path, chunk_length=1):
 def transcribe_audio():
     global chat_now
     p = pyaudio.PyAudio()
-
     stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,
@@ -129,9 +128,11 @@ def transcribe_audio():
         while keyboard.is_pressed('RIGHT_SHIFT'):
             count += 1
             chunk_file = "temp_input.wav"
-            record_chunk(p, stream, chunk_file)
+            record_chunk(p, stream, chunk_file, 10)
             audio_file= open(chunk_file, "rb")
+            start = time.time()
             transcript = client.audio.transcriptions.create(model="whisper-1", file=audio_file, response_format="text")
+            print(time.time()-start)
             print(count, transcript)
             os.remove(chunk_file)
             full_transcription.append(transcript)
