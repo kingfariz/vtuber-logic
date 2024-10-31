@@ -4,10 +4,6 @@ import sys
 import os
 import pytchat
 import time
-import re
-import pyaudio
-import keyboard
-import wave
 import threading
 import json
 import socket
@@ -23,10 +19,14 @@ from utils.twitch_config import *
 from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent, CommentEvent, GiftEvent
 import sounddevice as sd
-import soundfile as sf
-from pydantic import BaseModel
-from enum import Enum
-import pyautogui
+
+### Internal ###
+from config import api_key
+from features.agent import get_openai_answer
+from features.vtuber import VTuber
+from features.streaming.tiktok import tiktok_livechat
+from features.streaming.twitch import twitch_livechat
+from features.streaming.youtube import youtube_livechat
 
 # to help the CLI write unicode characters to the terminal
 # sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
@@ -34,16 +34,13 @@ import pyautogui
 client = OpenAI(api_key = api_key)
 
 conversation = []
-# Create a dictionary to hold the message data
-history = {"history": conversation}
-
 mode = 0
 total_characters = 0
 chat = ""
 chat_now = ""
 chat_prev = ""
 is_Speaking = False
-owner_name = "Farizi"
+owner_name = "Melting-LLM Admin"
 blacklist = ["Nightbot", "streamelements"]
 CHUNK = 1024
 CHANNELS = 1
@@ -415,7 +412,7 @@ def preparation():
             print('<<processing>>')
             conversation.append({'role': 'user', 'content': chat_now})
             chat_prev = chat_now
-            openai_answer()
+            get_openai_answer()
         time.sleep(1)
         # await asyncio.sleep(1)  # Use asyncio.sleep instead of time.sleep to not block the event loop
 
@@ -477,16 +474,17 @@ def main():
     print(sd.query_devices())
     try:
         mode = input("Mode (1-Mic, 2-Youtube Live, 3-Twitch Live, 4-Tiktok Live): ")
-
+        
         if mode == "1":
-            handle_recording()
+            vtuber = VTuber(openai_client=client)
+            vtuber.start_voice_conversations()
         
         elif mode == "2":
             live_id = input("Livestream ID: ")
             t = threading.Thread(target=preparation)
             t.start()
-            yt_livechat(live_id)
-
+            youtube_livechat(live_id)
+        
         elif mode == "3":
             print("To use this mode, make sure to change utils/twitch_config.py to your own config")
             t = threading.Thread(target=preparation)
@@ -498,7 +496,7 @@ def main():
             t = threading.Thread(target=preparation)
             t.start()
             tiktok_livechat(live_username)
-            
+    
     except KeyboardInterrupt:
         t.join()
         print("Stopped")
