@@ -1,4 +1,5 @@
 ### Python Default ###
+import asyncio
 import time
 import threading
 
@@ -13,7 +14,7 @@ from config import api_key
 from features.agent import get_openai_answer
 from features.vtuber import VTuber
 from features.streaming.tiktok import tiktok_livechat
-from features.streaming.twitch import twitch_livechat
+from features.streaming.twitch import start_twitch_livechat
 from features.streaming.youtube import youtube_livechat
 
 # to help the CLI write unicode characters to the terminal
@@ -65,8 +66,8 @@ def main():
             print("To use this mode, make sure to change utils/twitch_config.py to your own config")
             t = threading.Thread(target=preparation)
             t.start()
-            twitch_livechat()
-
+            start_twitch_livechat()
+        
         elif mode == "4":
             live_username = input("TikTok Livestream Username: ")
             t = threading.Thread(target=preparation)
