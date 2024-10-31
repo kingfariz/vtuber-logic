@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, SystemMessage
 from langchain_core.prompts import (
@@ -13,8 +13,6 @@ from pydantic import BaseModel,Field
 from langchain_core.messages import BaseMessage,AIMessage
 from typing import List
 
-load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
 
 class InMemoryHistory(BaseChatMessageHistory, BaseModel):
     """In memory implementation of chat message history."""
@@ -25,6 +23,18 @@ class InMemoryHistory(BaseChatMessageHistory, BaseModel):
         self.messages.extend(messages)
     def clear(self) -> None:
         self.messages = []
+
+def get_openai_client(model_name="gpt-4o-mini"):
+    load_dotenv()
+    api_key = os.getenv("OPENAI_API_KEY")
+    
+    return ChatOpenAI(
+        api_key=api_key,
+        model_name=model_name,
+        streaming=True,
+    )
+
+client = get_openai_client()
 
 store = {}
 
@@ -50,10 +60,6 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="history"),
     ("human","{llm_input}")
 ])
-
-client = ChatOpenAI(api_key=api_key,
-                        model_name="gpt-4o-mini",
-                        streaming=True)
 
 chain  = prompt| client
 chain_with_history = RunnableWithMessageHistory(

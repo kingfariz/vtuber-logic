@@ -1,5 +1,4 @@
 ### Python Default ###
-import asyncio
 import time
 import threading
 
@@ -13,6 +12,7 @@ import sounddevice as sd
 from config import api_key
 from features.agent import get_openai_answer
 from features.vtuber import VTuber
+from features.openai_t2t import get_openai_client
 from features.streaming.tiktok import tiktok_livechat
 from features.streaming.twitch import start_twitch_livechat
 from features.streaming.youtube import youtube_livechat
@@ -20,7 +20,7 @@ from features.streaming.youtube import youtube_livechat
 # to help the CLI write unicode characters to the terminal
 # sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
-client = OpenAI(api_key = api_key)
+client = get_openai_client()
 
 conversation = []
 mode = 0
