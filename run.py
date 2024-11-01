@@ -2,14 +2,10 @@
 import time
 import threading
 
-### LLM ###
-from openai import OpenAI
-
 ### Audio ###
 import sounddevice as sd
 
 ### Internal ###
-from config import api_key
 from features.agent import get_openai_answer
 from features.vtuber import VTuber
 from features.openai_t2t import get_openai_client
