@@ -3,7 +3,7 @@ import socket
 
 from emoji import demojize
 
-from streaming.twitch_config import server, port, nickname, token, user, channel
+from features.streaming.twitch_config import server, port, nickname, token, user, channel
 
 def twitch_livechat(chat="", blacklist=["Nightbot", "streamelements"]):
     sock = socket.socket()
