@@ -2,9 +2,7 @@ import Moment from "react-moment";
 import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
-import {
-  FaLeaf
-} from "react-icons/fa";
+import { FaLeaf } from "react-icons/fa";
 export default function ListingItem({ listing, id, onDelete }) {
   return (
     <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
@@ -30,20 +28,25 @@ export default function ListingItem({ listing, id, onDelete }) {
           </div>
           <p className="font-semibold m-0 text-xl truncate">{listing.name}</p>
           <p className="text-[#457b9d] mt-2 font-semibold">
-            $
-            {listing.offer
-              ? listing.discountedPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              : listing.regularPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            {listing.offer ? (
+              <span>
+                <span className="text-gray-500 line-through mr-2">
+                  ${listing.regularPrice.toLocaleString()}
+                </span>
+                <span className="text-green-700 font-bold">
+                  ${listing.discountedPrice.toLocaleString()}
+                </span>
+              </span>
+            ) : (
+              <span className="text-[#457b9d]">
+                ${listing.regularPrice.toLocaleString()}
+              </span>
+            )}
           </p>
+
           <div className="flex items-center mt-[10px] space-x-3">
             <div className="flex items-center space-x-1">
-              <p className="font-bold text-xs">
-                {listing.size + "ml"}
-              </p>
+              <p className="font-bold text-xs">{listing.size + "ml"}</p>
             </div>
           </div>
         </div>

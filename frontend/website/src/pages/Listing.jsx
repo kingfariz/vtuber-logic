@@ -1,22 +1,9 @@
 import { doc, getDoc } from "firebase/firestore";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
-import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, {
-  EffectFade,
-  Autoplay,
-  Navigation,
-  Pagination,
-} from "swiper";
-import "swiper/css/bundle";
-import {
-  FaShare,
-  FaLeaf,
-  FaTint,
-} from "react-icons/fa";
+import { FaShare, FaLeaf, FaTint } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import Contact from "../components/Contact";
 
@@ -27,7 +14,7 @@ export default function Listing() {
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
   const [contactSeller, setContactSeller] = useState(false);
-  SwiperCore.use([Autoplay, Navigation, Pagination]);
+
   useEffect(() => {
     async function fetchListing() {
       const docRef = doc(db, "listings", params.listingId);
@@ -39,97 +26,98 @@ export default function Listing() {
     }
     fetchListing();
   }, [params.listingId]);
+
   if (loading) {
     return <Spinner />;
   }
-  return (
-    <main>
-      <Swiper
-        slidesPerView={1}
-        navigation
-        pagination={{ type: "progressbar" }}
-        effect="fade"
-        modules={[EffectFade]}
-        autoplay={{ delay: 3000 }}
-      >
-        {listing.imgUrls.map((url, index) => (
-          <SwiperSlide key={index}>
-            <div
-              className="relative w-full overflow-hidden h-[300px]"
-              style={{
-                background: `url(${listing.imgUrls[index]}) center no-repeat`,
-                backgroundSize: "cover",
-              }}
-            ></div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <div
-        className="fixed top-[13%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center"
-        onClick={() => {
-          navigator.clipboard.writeText(window.location.href);
-          setShareLinkCopied(true);
-          setTimeout(() => {
-            setShareLinkCopied(false);
-          }, 2000);
-        }}
-      >
-        <FaShare className="text-lg text-slate-500" />
-      </div>
-      {shareLinkCopied && (
-        <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2">
-          Link Copied
-        </p>
-      )}
 
-      <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5">
-        <div className=" w-full ">
-          <p className="text-2xl font-bold mb-3 text-blue-900">
-            {listing.name} - ${" "}
-            {listing.offer
-              ? listing.discountedPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              : listing.regularPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+  return (
+    <main className="container mx-auto p-4">
+      {/* Image Container */}
+      <div className="relative w-full h-[400px] lg:h-[500px] mb-8 rounded-lg overflow-hidden shadow-md">
+        <img
+          src={listing.imgUrls[0]}
+          alt={listing.name}
+          className="w-full h-full object-cover"
+        />
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            setShareLinkCopied(true);
+            setTimeout(() => setShareLinkCopied(false), 2000);
+          }}
+          className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition"
+        >
+          <FaShare className="text-xl text-gray-600" />
+        </button>
+        {shareLinkCopied && (
+          <p className="absolute top-16 right-6 bg-white border border-gray-300 rounded-md p-2 shadow">
+            Link Copied!
           </p>
-          <p className="flex items-center mt-6 mb-3 font-semibold">
-            <FaLeaf className="text-green-700 mr-1" />
-              Scent Profile : {listing.scent}
-          </p>
-          <div className="flex justify-start items-center space-x-4 w-[75%]">
-            {listing.offer && (
-              <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">
-                ${+listing.regularPrice - +listing.discountedPrice} discount
-              </p>
-            )}
-          </div>
-          <p className="mt-3 mb-3">
-            <span className="font-semibold">Description - </span>
-            {listing.description}
-          </p>
-          <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
-            <li className="flex items-center whitespace-nowrap">
-              <FaTint className="text-lg mr-1" />
-              {+listing.size > 1 ? `${listing.size} ml` : "100 ml"}
-            </li>
-          </ul>
-          {listing.userRef !== auth.currentUser?.uid && !contactSeller && (
-            <div className="mt-6">
-              <button
-                onClick={() => setContactSeller(true)}
-                className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out "
-              >
-                Contact Seller
-              </button>
-            </div>
-          )}
-          {contactSeller && (
-            <Contact userRef={listing.userRef} listing={listing} />
-          )}
-        </div>
+        )}
       </div>
+
+      {/* Listing Details */}
+      <section className="bg-white p-6 rounded-lg shadow-lg space-y-4 lg:space-y-6">
+        <h1 className="text-3xl font-bold text-gray-800">{listing.name}</h1>
+        <h1 className="text-2xl font-semibold text-gray-800">
+          Price:{" "}
+          {listing.offer ? (
+            <span>
+              <span className="text-gray-500 line-through mr-2">
+                ${listing.regularPrice.toLocaleString()}
+              </span>
+              <span className="text-green-700 font-bold">
+                ${listing.discountedPrice.toLocaleString()}
+              </span>
+            </span>
+          ) : (
+            <span className="text-gray-800">
+              ${listing.regularPrice.toLocaleString()}
+            </span>
+          )}
+        </h1>
+
+        {listing.offer && (
+          <p className="text-sm font-semibold text-green-700 bg-green-100 p-2 rounded-md max-w-max shadow-sm">
+            Save $
+            {(
+              +listing.regularPrice - +listing.discountedPrice
+            ).toLocaleString()}
+            !
+          </p>
+        )}
+
+        <p className="flex items-center text-lg font-semibold text-gray-700">
+          <FaLeaf className="text-green-600 mr-2" />
+          Scent Profile: {listing.scent}
+        </p>
+
+        <p className="text-gray-700 text-lg leading-relaxed">
+          <span className="font-semibold">Description:</span>{" "}
+          {listing.description}
+        </p>
+
+        <ul className="flex flex-col sm:flex-row gap-4 text-md font-semibold text-gray-600">
+          <li className="flex items-center">
+            <FaTint className="text-blue-500 mr-2" />
+            {+listing.size > 1 ? `${listing.size} ml` : "100 ml"}
+          </li>
+        </ul>
+
+        {/* Contact Button */}
+        {listing.userRef !== !contactSeller && (
+          <button
+            onClick={() => setContactSeller(true)}
+            className="w-full py-3 mt-6 bg-blue-600 text-white font-medium rounded shadow-md hover:bg-blue-700 transition"
+          >
+            Contact Seller
+          </button>
+        )}
+        {contactSeller && (
+          <Contact userRef={listing.userRef} listing={listing} />
+        )}
+      </section>
     </main>
   );
 }
