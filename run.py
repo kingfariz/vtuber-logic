@@ -12,14 +12,15 @@ import sounddevice as sd
 from config import api_key
 from features.agent import get_openai_answer
 from features.vtuber import VTuber
+from features.openai_t2t import get_openai_client
 from features.streaming.tiktok import tiktok_livechat
-from features.streaming.twitch import twitch_livechat
+from features.streaming.twitch import start_twitch_livechat
 from features.streaming.youtube import youtube_livechat
 
 # to help the CLI write unicode characters to the terminal
 # sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
-client = OpenAI(api_key = api_key)
+client = get_openai_client()
 
 conversation = []
 mode = 0
@@ -49,7 +50,7 @@ def preparation():
 def main():
     print(sd.query_devices())
     try:
-        mode = input("Mode (1-Mic, 2-Youtube Live, 3-Twitch Live, 4-Tiktok Live): ")
+        mode = input("Mode (1-Mic, 2-Youtube Live, 3-Twitch Live, 4-Tiktok Live, 5-Text): ")
         
         if mode == "1":
             vtuber = VTuber(openai_client=client)
@@ -65,13 +66,17 @@ def main():
             print("To use this mode, make sure to change utils/twitch_config.py to your own config")
             t = threading.Thread(target=preparation)
             t.start()
-            twitch_livechat()
-
+            start_twitch_livechat()
+        
         elif mode == "4":
             live_username = input("TikTok Livestream Username: ")
             t = threading.Thread(target=preparation)
             t.start()
             tiktok_livechat(live_username)
+
+        elif mode == "5":
+            vtuber = VTuber(openai_client=client)
+            vtuber.start_text_conversations()
     
     except KeyboardInterrupt:
         t.join()
