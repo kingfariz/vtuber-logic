@@ -112,7 +112,7 @@ export default function Listing() {
           <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
             <li className="flex items-center whitespace-nowrap">
               <FaTint className="text-lg mr-1" />
-              {+listing.size > 1 ? `${listing.size} ml` : "50 ml"}
+              {+listing.size > 1 ? `${listing.size} ml` : "100 ml"}
             </li>
           </ul>
           {listing.userRef !== auth.currentUser?.uid && !contactSeller && (
