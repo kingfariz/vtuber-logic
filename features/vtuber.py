@@ -7,6 +7,7 @@ from features.TTS import voicevox_tts
 from features.transcribe import transcribe_audio
 from features.translate_openai import translate_openai
 from features.subtitle import generate_subtitle
+from features.audio import play_audio_english
 
 class VTuber():
     def __init__(self,
@@ -35,6 +36,8 @@ class VTuber():
             client=self.openai_client,
         )
         conversation.append({'role': 'assistant', 'content': message})
+
+        play_audio_english(message)
         
         text_jp = translate_openai(message, "JA")
         
