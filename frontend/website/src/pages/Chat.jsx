@@ -40,7 +40,7 @@ export default function Chat() {
   return (
     <div className="max-w-6xl mx-auto px-3">
       <h1 className="text-3xl text-center mt-6 font-bold mb-6">
-        {liveData.name || "YouTube Live"}
+        {"Chat with " + liveData.name || "AI Shopping Streamer Assistant"}
       </h1>
       {loading ? (
         <p>Loading...</p>
