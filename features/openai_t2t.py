@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv, dotenv_values
+from openai import OpenAI
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, SystemMessage
 from langchain_core.prompts import (
@@ -24,7 +25,13 @@ class InMemoryHistory(BaseChatMessageHistory, BaseModel):
     def clear(self) -> None:
         self.messages = []
 
-def get_openai_client(model_name="gpt-4o-mini"):
+def get_openai_client():
+    load_dotenv()
+    api_key = os.getenv("OPENAI_API_KEY")
+    
+    return OpenAI(api_key=api_key)
+
+def get_openai_client_langchain(model_name="gpt-4o-mini"):
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     
@@ -34,7 +41,7 @@ def get_openai_client(model_name="gpt-4o-mini"):
         streaming=True,
     )
 
-client = get_openai_client()
+client = get_openai_client_langchain()
 
 store = {}
 

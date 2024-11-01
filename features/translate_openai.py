@@ -1,9 +1,10 @@
 from openai import OpenAI
 
-from config import max_token, api_key
+from config import max_token
+from features.openai_t2t import get_openai_client
 
 # Set your OpenAI API key here
-client = OpenAI(api_key = api_key)
+client = get_openai_client()
 # sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
 def translate_openai(text, target_lang):
