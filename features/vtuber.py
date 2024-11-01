@@ -71,23 +71,27 @@ class VTuber():
             self.input_value = user_input  # Store new input
             self.new_input_flag = True
 
-
     def text_conversation(self):
         conversation: list[dict[str, str]] = list()
+        conversation.append(({'role': 'user', 'content': "greet your customer"}))
+        self.get_answer_in_japanese(conversation)
 
-        if self.new_input_flag:
-            content = self.owner_name + " said " + self.input_value
-            conversation.append({'role': 'user', 'content': content})
-            self.new_input_flag = False
-        else:
-            content = "continue"
-            conversation.append({'role': 'user', 'content': content})
-            self.input_value = ''
+        while True:
+            if self.new_input_flag:
+                content = self.owner_name + " said " + self.input_value
+                conversation.append({'role': 'user', 'content': content})
+                self.new_input_flag = False
+            else:
+                content = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
+                conversation.append({'role': 'user', 'content': content})
+                self.input_value = ''
+            self.get_answer_in_japanese(conversation)
 
+    def get_answer_in_japanese(self, conversation):
         message, expression_value = get_openai_answer(
-            conversation=conversation,
-            client=self.openai_client,
-        )
+                conversation=conversation,
+                client=self.openai_client,
+            )
         conversation.append({'role': 'assistant', 'content': message})
         
         text_jp = translate_openai(message, "JA")
@@ -103,7 +107,7 @@ class VTuber():
             translation=message,
             question=self.input_value,
         )
-        
+            
         play_audio()
     
         # Clear the text files after the assistant has finished speaking
