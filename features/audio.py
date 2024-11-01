@@ -28,13 +28,12 @@ def play_audio_english(message:str):
         text=message,
         model_id="eleven_turbo_v2_5",
         voice_settings=VoiceSettings(
-            stability = 0.3,
+            stability = 0.0,
             similarity_boost = 0.9,
+            # style: trade-off: might cause higher latency for higher style
+            style=0.0,
         ),
     )
-
-    print("Streaming audio data...")
-
     audio_stream = BytesIO()
     for chunk in response:
         if chunk:
@@ -43,7 +42,7 @@ def play_audio_english(message:str):
     audio_stream.seek(0)
     
     data,sampleRate = sf.read(audio_stream)
-    device_id = 3
+    device_id = 2
     sd.play(data,samplerate=sampleRate,device = device_id)
     sd.wait()
 
