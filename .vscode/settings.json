@@ -1,12 +1,12 @@
 {
   "cSpell.words": [
     "Airaa",
+    "Character",
     "ctrlright",
     "deeplx",
     "demojize",
     "livechat",
     "Nightbot",
-    "Character",
     "PRIVMSG",
     "pyaudio",
     "pytchat",
@@ -15,6 +15,7 @@
     "sounddevice",
     "soundfile",
     "streamelements",
+    "Tbfi",
     "upspeak",
     "Voicevox"
   ]

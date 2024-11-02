@@ -1,9 +1,9 @@
 # CREATOR MODE:
-# max_token = 200
-# maxCharacters = 200
+# max_token = 4096
+# maxCharacters = 4096
 # status_config = "CREATOR_MODE"
 
-## CHAT WITH VIWER MODE
+## CHAT WITH VIEWER MODE
 # max_token = 50
 # maxCharacters = 20
 # status_config = "VIEWER_MODE"
