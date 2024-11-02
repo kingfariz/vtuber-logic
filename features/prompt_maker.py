@@ -23,8 +23,6 @@ def get_prompt(history: list[str]):
             }
         )
 
-    prompt.append(history[-1])
-
     if status_config == "VIEWER_MODE":
         total_len = sum(len(d['content']) for d in prompt)
         while total_len > 4000:
