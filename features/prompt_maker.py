@@ -1,17 +1,26 @@
+import pandas as pd
 from config import *
 
 # sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
 
-def get_identity(identityPath):  
-    with open(identityPath, "r", encoding="utf-8") as f:
-        identityContext = f.read()
-    return {"role": "system", "content": identityContext}
+def get_identity(identity_path) -> str:
+    with open(identity_path, "r", encoding="utf-8") as f:
+        identity_context = f.read()
+    
+    return identity_context
+
+def get_system_prompt(
+    identity_path="characterConfig/Character/shopping_assistant.txt",
+) -> dict[str, str]:
+    identity_context = get_identity(identity_path)
+
+    return {"role": "system", "content": identity_context}
     
 def get_prompt(history: list[str]):
     total_len = 0
 
     # Get Vtuber identity/role
-    identity = get_identity("characterConfig/Character/shopping_assistant.txt")
+    identity = get_identity()
     prompt = [identity] + history
 
     # Step 3: Add a system message for response constraints
