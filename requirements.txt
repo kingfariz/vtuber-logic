@@ -18,3 +18,4 @@ python-dotenv
 langchain
 langchain-openai
 twitchAPI
+elevenlabs
