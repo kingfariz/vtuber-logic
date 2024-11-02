@@ -46,7 +46,7 @@ def preparation():
 def main():
     print(sd.query_devices())
     try:
-        mode = input("Mode (1-Mic, 2-Youtube Live, 3-Twitch Live, 4-Tiktok Live): ")
+        mode = input("Mode (1-Mic, 2-Youtube Live, 3-Twitch Live, 4-Tiktok Live, 5-Text): ")
         
         if mode == "1":
             vtuber = VTuber(openai_client=client)
@@ -69,6 +69,10 @@ def main():
             t = threading.Thread(target=preparation)
             t.start()
             tiktok_livechat(live_username)
+
+        elif mode == "5":
+            vtuber = VTuber(openai_client=client)
+            vtuber.start_text_conversations()
     
     except KeyboardInterrupt:
         t.join()
