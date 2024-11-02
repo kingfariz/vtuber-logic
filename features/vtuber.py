@@ -40,6 +40,7 @@ class VTuber():
         )
         conversation.append({'role': 'assistant', 'content': message})
 
+        # English TTS
         play_audio_english(message)
         
         text_jp = translate_openai(message, "JA")
