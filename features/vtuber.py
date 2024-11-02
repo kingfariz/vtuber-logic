@@ -20,7 +20,7 @@ class VTuber():
         self.openai_client = openai_client
         self.owner_name = owner_name
         self.new_input_flag = False
-        self.input_value = ''
+        self.latest_user_comment = ''
         self.conversation: list[dict[str, str]] = list()
     
     def start_voice_conversations(self):
@@ -76,19 +76,19 @@ class VTuber():
     def get_text_input(self):
         while True:
             user_input = input("Enter new input: ")
-            self.input_value = user_input  # Store new input
+            self.latest_user_comment = user_input  # Store new input
             self.new_input_flag = True
 
     def text_conversation(self):
         if self.new_input_flag:
-            content = self.owner_name + " said " + self.input_value
+            content = self.owner_name + " said " + self.latest_user_comment
             self.conversation.append({'role': 'user', 'content': content})
             self.new_input_flag = False
         else:
             # If not inputs, AI keeps talking
             content = "continue"
             self.conversation.append({'role': 'system', 'content': content})
-            self.input_value = ''
+            self.latest_user_comment = ''
 
         message, expression_value = get_openai_answer(
             conversation=self.conversation,
@@ -108,7 +108,7 @@ class VTuber():
         generate_subtitle(
             text=text_jp,
             translation=message,
-            question=self.input_value,
+            question=self.latest_user_comment,
         )
         
         play_audio()
