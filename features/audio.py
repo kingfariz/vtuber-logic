@@ -12,7 +12,8 @@ from typing import IO
 
 load_dotenv()
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
-DEVICE_ID = os.getenv("DEVICE_ID")
+# ENV returns value in string, parse to int
+DEVICE_ID = int(os.getenv("DEVICE_ID", 1))
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
