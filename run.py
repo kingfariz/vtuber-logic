@@ -1,7 +1,6 @@
 ### Python Default ###
 import time
 import threading
-import asyncio
 
 ### Audio ###
 import sounddevice as sd
@@ -73,7 +72,7 @@ def main():
 
         elif mode == "5":
             vtuber = VTuber(openai_client=client)
-            asyncio.run(vtuber.start_text_conversations())
+            vtuber.start_text_conversations()
     
     except KeyboardInterrupt:
         t.join()
