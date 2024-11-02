@@ -1,3 +1,5 @@
+import time
+
 from openai import OpenAI
 
 from features.agent import get_openai_answer
@@ -19,26 +21,25 @@ class VTuber():
         self.owner_name = owner_name
         self.new_input_flag = False
         self.input_value = ''
+        self.conversation: list[dict[str, str]] = list()
     
     def start_voice_conversations(self):
         while True:
             self.voice_conversation()
     
     def voice_conversation(self):
-        conversation: list[dict[str, str]] = list()
-        
         # Record and save mic input as a wave file
         record_audio()
         
         transcript = transcribe_audio(client=self.openai_client)
         content = self.owner_name + " said " + transcript
-        conversation.append({'role': 'user', 'content': content})
+        self.conversation.append({'role': 'user', 'content': content})
         
         message, expression_value = get_openai_answer(
-            conversation=conversation,
+            conversation=self.conversation,
             client=self.openai_client,
         )
-        conversation.append({'role': 'assistant', 'content': message})
+        self.conversation.append({'role': 'assistant', 'content': message})
 
         # English TTS
         play_audio_english(message)
@@ -61,13 +62,16 @@ class VTuber():
 
     def start_text_conversations(self):
         prompt_thread = threading.Thread(target=self.get_text_input)
-        respond_thread = threading.Thread(target=self.text_conversation)
-
         prompt_thread.start()
-        respond_thread.start()
-
-        prompt_thread.join()
-        respond_thread.join()
+        # respond_thread = threading.Thread(target=self.text_conversation)
+        # respond_thread.start()
+        
+        try:
+            while True:
+                self.text_conversation()
+        except KeyboardInterrupt:
+            prompt_thread.join()
+        # respond_thread.join()
 
     def get_text_input(self):
         while True:
@@ -75,29 +79,28 @@ class VTuber():
             self.input_value = user_input  # Store new input
             self.new_input_flag = True
 
-
     def text_conversation(self):
-        conversation: list[dict[str, str]] = list()
-
         if self.new_input_flag:
             content = self.owner_name + " said " + self.input_value
-            conversation.append({'role': 'user', 'content': content})
+            self.conversation.append({'role': 'user', 'content': content})
             self.new_input_flag = False
         else:
+            # If not inputs, AI keeps talking
             content = "continue"
-            conversation.append({'role': 'user', 'content': content})
+            self.conversation.append({'role': 'system', 'content': content})
             self.input_value = ''
 
         message, expression_value = get_openai_answer(
-            conversation=conversation,
+            conversation=self.conversation,
             client=self.openai_client,
         )
-        conversation.append({'role': 'assistant', 'content': message})
+        self.conversation.append({'role': 'assistant', 'content': message})
         
         text_jp = translate_openai(message, "JA")
         
         print("RAW Answer: " + message)
         print("JP Answer: " + text_jp)
+        time.sleep(10) # Mock speaking time
         
         # Japanese TTS
         voicevox_tts(text_jp)
