@@ -100,7 +100,7 @@ class VTuber():
         
         print("RAW Answer: " + message)
         print("JP Answer: " + text_jp)
-        time.sleep(10) # Mock speaking time
+        # time.sleep(10) # Mock speaking time
         
         # Japanese TTS
         voicevox_tts(text_jp)
