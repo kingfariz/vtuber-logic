@@ -40,8 +40,7 @@ def get_prompt(history: list[str]):
                 "content": f"Make sure your response is within {maxCharacters} characters. Avoid answering with more than {maxCharacters} characters by summarizing the response. Here is the latest conversation.",
             }
         )
-
-    if status_config == "VIEWER_MODE":
+        
         total_len = sum(len(d['content']) for d in prompt)
         while total_len > 4000:
             try:
