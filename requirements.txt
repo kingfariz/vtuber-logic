@@ -19,3 +19,4 @@ langchain
 langchain-openai
 twitchAPI
 elevenlabs
+nintendeals
