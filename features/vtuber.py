@@ -34,7 +34,7 @@ class VTuber():
     
     def update_background_image(self, product_value: str):
         prop_output_path = './assets/background-output/background-output.JPG'
-        product_image_path = f'./assets/{product_value.lower()}.jpg'
+        product_image_path = f'./assets/backgrounds/{product_value.lower()}.jpg'
 
         # Step 1: Delete the existing background-output.jpg if it exists
         if os.path.exists(prop_output_path):
@@ -48,7 +48,7 @@ class VTuber():
 
     def update_product_image(self, product_value: str):
         prop_output_path = './assets/prop-output/prop-output.jpg'
-        product_image_path = f'./assets/{product_value.lower()}.jpg'
+        product_image_path = f'./assets/products/{product_value.lower()}.jpg'
 
         # Step 1: Delete the existing prop-output.jpg if it exists
         if os.path.exists(prop_output_path):
