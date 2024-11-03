@@ -11,6 +11,7 @@ from features.transcribe import transcribe_audio
 from features.translate_openai import translate_openai
 from features.subtitle import generate_subtitle
 from features.audio import play_audio_english
+from features.prompt_maker import get_random_product_prompt
 import threading
 
 class VTuber():
@@ -95,7 +96,8 @@ class VTuber():
             self.new_input_flag = False
         else:
             # If not inputs, AI keeps talking
-            continue_prompt = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
+            continue_prompt = get_random_product_prompt()
+            #continue_prompt = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
             self.conversation.append({'role': 'system', 'content': continue_prompt})
             self.latest_user_comment = ''
 
@@ -130,7 +132,7 @@ class VTuber():
             
             # Plays the saved .wav file
             play_audio()
-    
+
         # Clear the text files after the assistant has finished speaking
         # time.sleep(1)
         # # asyncio.sleep(1)
