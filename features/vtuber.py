@@ -1,4 +1,5 @@
 import time
+from typing import Literal
 
 from openai import OpenAI
 
@@ -15,9 +16,11 @@ import threading
 class VTuber():
     def __init__(self,
                  openai_client: OpenAI,
+                 language: Literal["EN", "JA"] = "EN",
                  owner_name="Default Owner",
         ):
         self.openai_client = openai_client
+        self.language = language
         self.owner_name = owner_name
         self.new_input_flag = False
         self.latest_user_comment = ''
@@ -47,18 +50,24 @@ class VTuber():
         text_jp = translate_openai(message, "JA")
         
         print("RAW Answer: " + message)
-        print("JP Answer: " + text_jp)
+
+        if self.language == "EN":
+            play_audio_english(message)
+            
+        elif self.language == "JA":
+            text_jp = translate_openai(message, "JA")
+            print("JP Answer: " + text_jp)
+            
+            # Japanese TTS
+            voicevox_tts(text_jp)
+            
+            generate_subtitle(
+                text=text_jp,
+                translation=message,
+                question=transcript,
+            )
         
-        # Japanese TTS
-        voicevox_tts(text_jp)
-        
-        generate_subtitle(
-            text=text_jp,
-            translation=message,
-            question=transcript,
-        )
-        
-        play_audio()
+            play_audio()
 
     def start_text_conversations(self):
         prompt_thread = threading.Thread(target=self.get_text_input)
