@@ -35,6 +35,7 @@ class VTuber():
     def update_background_image(self, product_value: str):
         prop_output_path = './assets/background-output/background-output.JPG'
         product_image_path = f'./assets/backgrounds/{product_value.lower()}.jpg'
+        default = f'./assets/backgrounds/default.jpg'
 
         # Step 1: Delete the existing background-output.jpg if it exists
         if os.path.exists(prop_output_path):
@@ -44,7 +45,9 @@ class VTuber():
         if os.path.exists(product_image_path):
             shutil.copy(product_image_path, prop_output_path)
         else:
-            print(f"Background image {product_image_path} does not exist. Skip saving the background image")
+            print(f"Background image {product_image_path} does not exist. using default background image")
+            shutil.copy(default, prop_output_path)
+
 
     def update_product_image(self, product_value: str):
         prop_output_path = './assets/prop-output/prop-output.jpg'
