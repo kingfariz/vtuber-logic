@@ -44,12 +44,18 @@ def get_openai_answer(conversation, client: OpenAI,
     completion_tokens = response.usage.prompt_tokens
     total_tokens = response.usage.total_tokens
 
+    # Temporary hardcode
+    background_value = "default"
+    product_value = "luna-embrace"
+
     # Print the token usage and cost
     print(f"Prompt: {prompt}")
     print(f"Prompt Tokens: {prompt_tokens}")
     print(f"Completion Tokens: {completion_tokens}")
     print(f"Total Tokens: {total_tokens}")
     print(f"Expression: {expression_value}")
+    print(f"product_value: {product_value}")
+    print(f"background_value: {background_value}")
     print(f"___________")
     
-    return message, expression_value
+    return message, expression_value, product_value, background_value

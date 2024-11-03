@@ -5,8 +5,10 @@
     "ctrlright",
     "deeplx",
     "demojize",
+    "JARDIN",
     "livechat",
     "Nightbot",
+    "Ninjacat",
     "PRIVMSG",
     "pyaudio",
     "pytchat",
@@ -17,6 +19,8 @@
     "streamelements",
     "Tbfi",
     "upspeak",
-    "Voicevox"
+    "Voicevox",
+    "vtube",
+    "websockets"
   ]
 }
