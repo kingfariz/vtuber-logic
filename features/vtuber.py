@@ -18,10 +18,13 @@ class VTuber():
                  openai_client: OpenAI,
                  language: Literal["EN", "JA"] = "EN",
                  owner_name="Default Owner",
+                 play_voice=True,
         ):
         self.openai_client = openai_client
         self.language = language
         self.owner_name = owner_name
+        self.play_voice = play_voice
+        
         self.new_input_flag = False
         self.latest_user_comment = ''
         self.conversation: list[dict[str, str]] = list()
@@ -43,14 +46,11 @@ class VTuber():
             client=self.openai_client,
         )
         self.conversation.append({'role': 'assistant', 'content': message})
-
-        # English TTS
-        play_audio_english(message)
-        
-        text_jp = translate_openai(message, "JA")
-        
         print("RAW Answer: " + message)
-
+        
+        if not self.play_voice:
+            return
+        
         if self.language == "EN":
             play_audio_english(message)
             
@@ -104,6 +104,10 @@ class VTuber():
             client=self.openai_client,
         )
         self.conversation.append({'role': 'assistant', 'content': message})
+        print("RAW Answer: " + message)
+        
+        if not self.play_voice:
+            return
         
         if self.language == "EN":
             play_audio_english(message)
@@ -111,7 +115,6 @@ class VTuber():
         elif self.language == "JA":
             text_jp = translate_openai(message, "JA")
             
-            print("RAW Answer: " + message)
             print("JP Answer: " + text_jp)
             # time.sleep(10) # Mock speaking time
             
