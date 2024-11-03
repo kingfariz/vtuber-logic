@@ -95,8 +95,8 @@ class VTuber():
             self.new_input_flag = False
         else:
             # If not inputs, AI keeps talking
-            content = "continue"
-            self.conversation.append({'role': 'system', 'content': content})
+            continue_prompt = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
+            self.conversation.append({'role': 'system', 'content': continue_prompt})
             self.latest_user_comment = ''
 
         message, expression_value = get_openai_answer(
