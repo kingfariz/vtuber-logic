@@ -33,9 +33,9 @@ class VTuber():
         self.latest_user_comment = ''
         self.conversation: list[dict[str, str]] = list()
     
-    def update_background_image(self, product_value: str):
+    def update_background_image(self, background_value: str):
         prop_output_path = './assets/background-output/background-output.JPG'
-        product_image_path = f'./assets/backgrounds/{product_value.lower()}.jpg'
+        background_image_path = f'./assets/backgrounds/{background_value.lower()}.jpg'
         default = f'./assets/backgrounds/default.jpg'
 
         # Step 1: Delete the existing background-output.jpg if it exists
@@ -43,10 +43,10 @@ class VTuber():
             os.remove(prop_output_path)
 
         # Step 2: Copy the new product image to background-output
-        if os.path.exists(product_image_path):
-            shutil.copy(product_image_path, prop_output_path)
+        if os.path.exists(background_image_path):
+            shutil.copy(background_image_path, prop_output_path)
         else:
-            print(f"Background image {product_image_path} does not exist. using default background image")
+            print(f"Background image {background_image_path} does not exist. using default background image")
             shutil.copy(default, prop_output_path)
 
 
@@ -137,15 +137,23 @@ class VTuber():
             self.new_input_flag = False
         else:
             # If not inputs, AI keeps talking
-            continue_prompt = get_random_product_prompt()
-            #continue_prompt = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
+            #random_product_prompt = get_random_product_prompt('data/products/perfumes.csv')
+            continue_prompt = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
             self.conversation.append({'role': 'system', 'content': continue_prompt})
             self.latest_user_comment = ''
 
-        message, expression_value = get_openai_answer(
+        message, expression_value, product_value, background_value= get_openai_answer(
             conversation=self.conversation,
             client=self.openai_client,
         )
+
+        # Update product image based on the product_value received
+        print(product_value)
+        self.update_product_image(product_value)
+
+        # Update product image based on the product_value received
+        self.update_background_image(background_value)
+
         self.conversation.append({'role': 'assistant', 'content': message})
         print("RAW Answer: " + message)
         
