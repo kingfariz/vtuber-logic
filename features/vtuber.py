@@ -105,22 +105,28 @@ class VTuber():
         )
         self.conversation.append({'role': 'assistant', 'content': message})
         
-        text_jp = translate_openai(message, "JA")
-        
-        print("RAW Answer: " + message)
-        print("JP Answer: " + text_jp)
-        # time.sleep(10) # Mock speaking time
-        
-        # Japanese TTS
-        voicevox_tts(text_jp)
-        
-        generate_subtitle(
-            text=text_jp,
-            translation=message,
-            question=self.latest_user_comment,
-        )
-        
-        play_audio()
+        if self.language == "EN":
+            play_audio_english(message)
+            
+        elif self.language == "JA":
+            text_jp = translate_openai(message, "JA")
+            
+            print("RAW Answer: " + message)
+            print("JP Answer: " + text_jp)
+            # time.sleep(10) # Mock speaking time
+            
+            # Japanese TTS
+            # Saves .wav file
+            voicevox_tts(text_jp)
+            
+            generate_subtitle(
+                text=text_jp,
+                translation=message,
+                question=self.latest_user_comment,
+            )
+            
+            # Plays the saved .wav file
+            play_audio()
     
         # Clear the text files after the assistant has finished speaking
         # time.sleep(1)
