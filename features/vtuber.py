@@ -11,6 +11,7 @@ from features.transcribe import transcribe_audio
 from features.translate_openai import translate_openai
 from features.subtitle import generate_subtitle
 from features.audio import play_audio_english
+from features.prompt_maker import get_random_product_prompt
 import threading
 import pandas as pd
 
@@ -96,7 +97,7 @@ class VTuber():
             self.new_input_flag = False
         else:
             # If not inputs, AI keeps talking
-            continue_prompt = self.get_random_product_prompt()
+            continue_prompt = get_random_product_prompt()
             #continue_prompt = "Continue the conversation naturally from where you left off. When you've covered all aspects of the product, shift to introducing another product. Keep the tone conversational and avoid sounding like you're answering a question."
             self.conversation.append({'role': 'system', 'content': continue_prompt})
             self.latest_user_comment = ''
@@ -133,15 +134,6 @@ class VTuber():
             # Plays the saved .wav file
             play_audio()
 
-    def get_random_product_prompt(self, csv_path="data/products/games.csv"):
-        df = pd.read_csv(csv_path,encoding="ISO-8859-1")
-        random_product = df.sample(n=1)
-        random_product_value = str(random_product.values.tolist())
-        # [TODO] pass the image url to the live stream
-        random_product_image = random_product['image_url']
-        random_product_prompt = "Find aritcle about " + random_product_value + " introduce the product with around 100 words without using Markdown formatting symbols" 
-        return random_product_prompt
-    
         # Clear the text files after the assistant has finished speaking
         # time.sleep(1)
         # # asyncio.sleep(1)

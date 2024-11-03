@@ -24,6 +24,15 @@ def get_system_prompt(
     system_prompt_str = identity_context + product_prompt
 
     return {"role": "system", "content": system_prompt_str}
+
+def get_random_product_prompt(csv_path="data/products/games.csv"):
+    df = pd.read_csv(csv_path,encoding="ISO-8859-1")
+    random_product = df.sample(n=1)
+    random_product_value = str(random_product.values.tolist())
+    # [TODO] pass the image url to the live stream
+    random_product_image = random_product['image_url']
+    random_product_prompt = "Find aritcle about " + random_product_value + " introduce the product with around 100 words without using Markdown formatting symbols" 
+    return random_product_prompt
     
 def get_prompt(history: list[str]):
     total_len = 0
