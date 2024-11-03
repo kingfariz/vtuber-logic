@@ -54,9 +54,11 @@ def main():
         
         elif mode == "2":
             live_id = input("Livestream ID: ")
-            t = threading.Thread(target=preparation)
-            t.start()
-            youtube_livechat(live_id)
+            # t = threading.Thread(target=preparation)
+            # t.start()
+            # youtube_livechat(live_id)
+            vtuber = VTuber(openai_client=client)
+            vtuber.start_youtube_conversations(live_id)
         
         elif mode == "3":
             print("To use this mode, make sure to change utils/twitch_config.py to your own config")

@@ -1,8 +1,9 @@
 import os
+import re
 import shutil
 import time
 from typing import Literal
-
+import pytchat
 from openai import OpenAI
 
 from features.agent import get_openai_answer
@@ -180,3 +181,54 @@ class VTuber():
         #     f.truncate(0)
         # with open ("chat.txt", "w") as f:
         #     f.truncate(0)
+
+    def start_youtube_conversations(self, live_id: str):
+        live = pytchat.create(video_id=live_id)
+        blacklist = ["Nightbot", "streamelements"]
+
+        while live.is_alive():
+            try:
+                for c in live.get().sync_items():
+                    if c.author.name in blacklist or c.message.startswith("!"):
+                        continue
+
+                    # Clean the message from emojis or other special characters
+                    chat_raw = re.sub(r':[^\s]+:', '', c.message).replace('#', '')
+                    user_message = f"{self.owner_name} saw that {c.author.name} said: {chat_raw}"
+
+                    # Add to conversation history
+                    self.conversation.append({"role": "user", "content": user_message})
+
+                    # Get AI response
+                    message, expression_value, product_value, background_value = get_openai_answer(
+                        conversation=self.conversation,
+                        client=self.openai_client,
+                    )
+
+                    # Update background and product image based on the received values
+                    self.update_background_image(background_value)
+                    self.update_product_image(product_value)
+
+                    # Append assistant's response
+                    self.conversation.append({"role": "assistant", "content": message})
+                    print(f"Response: {message}")
+
+                    # Play response audio if enabled
+                    if self.play_voice:
+                        self._play_response_audio(message)
+
+                    time.sleep(1)  # To avoid flooding the chat
+
+            except Exception as e:
+                print(f"Error receiving chat: {e}")
+
+    def _play_response_audio(self, message: str):
+        if self.language == "EN":
+            play_audio_english(message)
+        elif self.language == "JA":
+            text_jp = translate_openai(message, "JA")
+            voicevox_tts(text_jp)
+            generate_subtitle(text=text_jp, translation=message, question=message)
+            play_audio()
+        else:
+            play_audio_english(message)
