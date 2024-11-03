@@ -26,7 +26,7 @@ def get_openai_answer(conversation, client: OpenAI,
                 print("Error removing old messages: {0}".format(e))
 
     prompt = get_prompt(conversation)
-    
+
     response = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
         messages=prompt,
