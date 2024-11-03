@@ -163,7 +163,6 @@ cython_debug/
 
 
 # Repo Specific
-config.py
 tes.py
 __pycache__/
 chat.txt
