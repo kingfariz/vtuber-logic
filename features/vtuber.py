@@ -13,7 +13,6 @@ from features.subtitle import generate_subtitle
 from features.audio import play_audio_english
 from features.prompt_maker import get_random_product_prompt
 import threading
-import pandas as pd
 
 class VTuber():
     def __init__(self,
