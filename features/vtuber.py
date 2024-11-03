@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 from typing import Literal
 
@@ -30,6 +32,34 @@ class VTuber():
         self.latest_user_comment = ''
         self.conversation: list[dict[str, str]] = list()
     
+    def update_background_image(self, product_value: str):
+        prop_output_path = './assets/background-output/background-output.JPG'
+        product_image_path = f'./assets/{product_value.lower()}.jpg'
+
+        # Step 1: Delete the existing background-output.jpg if it exists
+        if os.path.exists(prop_output_path):
+            os.remove(prop_output_path)
+
+        # Step 2: Copy the new product image to background-output
+        if os.path.exists(product_image_path):
+            shutil.copy(product_image_path, prop_output_path)
+        else:
+            print(f"Background image {product_image_path} does not exist. Skip saving the background image")
+
+    def update_product_image(self, product_value: str):
+        prop_output_path = './assets/prop-output/prop-output.jpg'
+        product_image_path = f'./assets/{product_value.lower()}.jpg'
+
+        # Step 1: Delete the existing prop-output.jpg if it exists
+        if os.path.exists(prop_output_path):
+            os.remove(prop_output_path)
+
+        # Step 2: Copy the new product image to prop-output
+        if os.path.exists(product_image_path):
+            shutil.copy(product_image_path, prop_output_path)
+        else:
+            print(f"Product image {product_image_path} does not exist. Skip saving the product image")
+
     def start_voice_conversations(self):
         while True:
             self.voice_conversation()
@@ -42,10 +72,17 @@ class VTuber():
         content = self.owner_name + " said " + transcript
         self.conversation.append({'role': 'user', 'content': content})
         
-        message, expression_value = get_openai_answer(
+        message, expression_value, product_value, background_value = get_openai_answer(
             conversation=self.conversation,
             client=self.openai_client,
         )
+
+        # Update product image based on the product_value received
+        self.update_product_image(product_value)
+
+        # Update product image based on the product_value received
+        self.update_background_image(background_value)
+        
         self.conversation.append({'role': 'assistant', 'content': message})
         print("RAW Answer: " + message)
         
