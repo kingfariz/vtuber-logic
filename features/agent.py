@@ -2,12 +2,16 @@ from pydantic import BaseModel
 from openai import OpenAI
 
 from config import status_config, max_token
+from features.backgrounds_model import BackgroundEnum
 from features.expressions import ExpressionEnum
+from features.product_model import ProductEnum
 from features.prompt_maker import get_prompt
 
 class AIChatResponse(BaseModel):
     message: str
     expression: ExpressionEnum
+    product_value: ProductEnum
+    background_value: BackgroundEnum
 
 # answer from OpenAI
 def get_openai_answer(conversation, client: OpenAI,
@@ -39,14 +43,16 @@ def get_openai_answer(conversation, client: OpenAI,
     )
     message = response.choices[0].message.parsed.message
     expression_value = response.choices[0].message.parsed.expression
+    background_value = response.choices[0].message.parsed.background_value
+    product_value = response.choices[0].message.parsed.product_value
 
     prompt_tokens = response.usage.completion_tokens
     completion_tokens = response.usage.prompt_tokens
     total_tokens = response.usage.total_tokens
 
     # Temporary hardcode
-    background_value = "default"
-    product_value = "luna-embrace"
+    # background_value = "default"
+    # product_value = "luna-embrace"
 
     # Print the token usage and cost
     print(f"Prompt: {prompt}")
