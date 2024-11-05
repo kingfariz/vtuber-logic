@@ -4,13 +4,6 @@ Utilizes various technologies such as VoiceVox Engine, DeepL, Whisper OpenAI, Se
 
 ![Local Image](Capture.JPG)
 
-## Demo
-
-- [Demo](https://www.youtube.com/shorts/_mKVr3ZaM9Q)
-- [Live Test](https://youtu.be/h6UEgJxH1-E?t=1616)
-- [Code Explain](https://youtu.be/qpNG9qrcmrQ)
-- [Clip](https://www.youtube.com/watch?v=qTkESIBd5Qk)
-
 ## Technologies Used
 
 - [VoiceVox Docker](https://hub.docker.com/r/voicevox/voicevox_engine) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SociallyIneptWeeb/LanguageLeapAI/blob/main/src/run_voicevox_colab.ipynb)
